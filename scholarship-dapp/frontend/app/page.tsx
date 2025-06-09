@@ -40,7 +40,7 @@ const SCHOLARSHIP_ABI = [
 ];
 
 // Replace with your deployed contract address
-const CONTRACT_ADDRESS = "0x..."; // You'll need to replace this with your actual contract address
+const CONTRACT_ADDRESS = "0x7c063B5e9F9aFdBF2C95B33e033451173119c216"; // You'll need to replace this with your actual contract address
 
 export default function ScholarshipDApp() {
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
