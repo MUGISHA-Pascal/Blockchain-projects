@@ -56,39 +56,28 @@ export default function Component() {
   const [newName, setNewName] = useState("");
   const [displayedName, setDisplayedName] = useState("");
 
-  // Initialize Web3 and connect wallet
   const connectWallet = async () => {
     try {
       setLoading(true);
       setError("");
-
-      // Check if MetaMask is installed
       if (typeof window.ethereum !== "undefined") {
         const web3Instance = new Web3(window.ethereum);
-
-        // Request account access
         const accounts = await window.ethereum.request({
           method: "eth_requestAccounts",
         });
-
         if (accounts.length > 0) {
           setWeb3(web3Instance);
           setAccount(accounts[0]);
           setIsConnected(true);
-
-          // Initialize contract
           const contractInstance = new web3Instance.eth.Contract(
             CONTRACT_ABI,
             CONTRACT_ADDRESS
           );
           setContract(contractInstance);
-
           setSuccess("Wallet connected successfully!");
         }
       } else {
-        setError(
-          "MetaMask is not installed. Please install MetaMask to use this app."
-        );
+        setError("MetaMask is not installed.");
       }
     } catch (err: any) {
       setError(`Failed to connect wallet: ${err.message}`);
@@ -97,23 +86,19 @@ export default function Component() {
     }
   };
 
-  // Set name function
   const handleSetName = async () => {
     if (!contract || !account || !newName.trim()) {
       setError("Please enter a valid name");
       return;
     }
-
     try {
       setLoading(true);
       setError("");
       setSuccess("");
-
       await contract.methods.setName(newName.trim()).send({
         from: account,
         gas: 100000,
       });
-
       setSuccess("Name set successfully!");
       setNewName("");
     } catch (err: any) {
@@ -123,19 +108,15 @@ export default function Component() {
     }
   };
 
-  // Get name function
   const handleGetName = async () => {
     if (!contract || !account) {
       setError("Contract not initialized");
       return;
     }
-
     try {
       setLoading(true);
       setError("");
-
       const name = await contract.methods.getMyName().call({ from: account });
-
       setDisplayedName(name || "No name set");
       setSuccess("Name retrieved successfully!");
     } catch (err: any) {
@@ -146,7 +127,6 @@ export default function Component() {
     }
   };
 
-  // Listen for account changes
   useEffect(() => {
     if (typeof window.ethereum !== "undefined") {
       window.ethereum.on("accountsChanged", (accounts: string[]) => {
@@ -163,21 +143,18 @@ export default function Component() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <div className="max-w-2xl mx-auto space-y-6">
-        {/* Wallet Connection */}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-4">
+      <div className="w-full max-w-2xl space-y-6">
         {!isConnected ? (
           <div className="text-center space-y-6">
-            <h1 className="text-4xl font-bold text-gray-900">
-              Name Storage DApp
-            </h1>
-            <Card className="max-w-md mx-auto">
+            <h1 className="text-4xl font-bold text-white">Name Storage DApp</h1>
+            <Card className="bg-gray-800 border border-gray-700 shadow-lg">
               <CardHeader className="text-center">
-                <CardTitle className="flex items-center justify-center gap-2">
+                <CardTitle className="flex items-center justify-center gap-2 text-white">
                   <Wallet className="h-5 w-5" />
                   Connect Wallet
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-gray-400">
                   Connect your MetaMask wallet to interact with the smart
                   contract
                 </CardDescription>
@@ -186,7 +163,7 @@ export default function Component() {
                 <Button
                   onClick={connectWallet}
                   disabled={loading}
-                  className="w-full"
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
                 >
                   {loading ? (
                     <>
@@ -202,30 +179,16 @@ export default function Component() {
           </div>
         ) : (
           <div className="text-center space-y-8">
-            {/* Main Heading */}
-            <h1 className="text-6xl font-bold text-gray-900 mb-8">
-              Hello World and Name Dapp
+            <h1 className="text-5xl font-extrabold text-white">
+              Hello World and Name DApp
             </h1>
-
-            {/* Connected Account Info */}
-            {/* <Card>
-              <CardContent className="pt-6">
-                <div className="text-center space-y-2">
-                  <Label className="text-sm font-medium">
-                    Connected Account:
-                  </Label>
-                  <p className="text-sm text-gray-600 font-mono break-all">
-                    {account}
-                  </p>
-                </div>
-              </CardContent>
-            </Card> */}
-
-            {/* Name Input and Buttons */}
-            <Card>
+            <Card className="bg-gray-800 border border-gray-700 shadow-lg">
               <CardContent className="pt-6 space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name-input" className="text-lg font-medium">
+                  <Label
+                    htmlFor="name-input"
+                    className="text-lg font-medium text-white"
+                  >
                     Enter your name:
                   </Label>
                   <Input
@@ -234,7 +197,7 @@ export default function Component() {
                     onChange={(e) => setNewName(e.target.value)}
                     placeholder="Your name"
                     disabled={loading}
-                    className="text-lg p-4"
+                    className="text-lg p-4 bg-gray-900 text-white border border-gray-600"
                   />
                 </div>
 
@@ -243,7 +206,7 @@ export default function Component() {
                     onClick={handleSetName}
                     disabled={loading || !newName.trim()}
                     size="lg"
-                    className="px-8"
+                    className="px-8 bg-green-600 hover:bg-green-700 text-white"
                   >
                     {loading ? (
                       <>
@@ -260,7 +223,7 @@ export default function Component() {
                     disabled={loading}
                     variant="outline"
                     size="lg"
-                    className="px-8"
+                    className="px-8 border border-gray-500 text-gray-700 hover:bg-gray-700"
                   >
                     {loading ? (
                       <>
@@ -273,13 +236,12 @@ export default function Component() {
                   </Button>
                 </div>
 
-                {/* Display Retrieved Name */}
                 {displayedName && (
-                  <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <Label className="text-lg font-medium text-green-800">
+                  <div className="mt-6 p-4 bg-gray-700 border border-gray-600 rounded-lg">
+                    <Label className="text-lg font-medium text-white">
                       Your Name:
                     </Label>
-                    <p className="text-xl text-green-700 font-semibold mt-2">
+                    <p className="text-xl text-green-400 font-semibold mt-2">
                       {displayedName}
                     </p>
                   </div>
@@ -289,18 +251,18 @@ export default function Component() {
           </div>
         )}
 
-        {/* Alerts */}
         {error && (
-          <Alert variant="destructive">
+          <Alert
+            variant="destructive"
+            className="bg-red-900 border border-red-700 text-white"
+          >
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
 
         {success && (
-          <Alert className="border-green-200 bg-green-50">
-            <AlertDescription className="text-green-800">
-              {success}
-            </AlertDescription>
+          <Alert className="bg-green-900 border border-green-700 text-white">
+            <AlertDescription>{success}</AlertDescription>
           </Alert>
         )}
       </div>
