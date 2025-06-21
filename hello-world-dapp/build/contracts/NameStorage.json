@@ -2831,10 +2831,16 @@
       "links": {},
       "address": "0x74AB57Ae9a1D895cD58be251e2f1872603D1D7C8",
       "transactionHash": "0xdd5087cdb6c606c2a6ea80daa84a01c15795eb76424838d65f5b1e970737c155"
+    },
+    "1750469121935": {
+      "events": {},
+      "links": {},
+      "address": "0x53B57865956abaCa2BA66136d68E1c80b998275D",
+      "transactionHash": "0x50f71b64428e1bff32719ab42d5baec75bf64b35dfbb5b589e1f0b5ce831ec11"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-06-21T01:18:57.922Z",
+  "updatedAt": "2025-06-21T01:25:26.173Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
